@@ -24,7 +24,7 @@ while dna == None:
 
 mutation = None
 while mutation == None:
-    mutation = input('Please enter the mutation sequence: ').upper()
+    mutation = genome_sequence(input('Please enter the mutation sequence: ').upper())
 
 
 # Finding mutation
