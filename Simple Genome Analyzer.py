@@ -36,7 +36,6 @@ for base in dna:
 print("GC count =",gc_count)
 
 # GC Percentage
-
 gc_percentage = (gc_count/len(dna)) * 100
 print("GC Percentage =",gc_percentage,"%")
 
