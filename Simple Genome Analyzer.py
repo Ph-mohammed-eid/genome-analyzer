@@ -37,7 +37,7 @@ print("GC count =",gc_count)
 
 # GC Percentage
 gc_percentage = (gc_count/len(dna)) * 100
-print("GC Percentage =",gc_percentage,"%")
+print(f"GC Percentage = {round(gc_percentage, 3)}%")
 
 # RNA sequence
 rna = dna.replace("T", "U")
