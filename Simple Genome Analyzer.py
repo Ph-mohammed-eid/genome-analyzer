@@ -2,43 +2,113 @@
 # --- Welcome To Simple Genome Analyzer Program ---
 # --------------------------------------------------
 
-def genome_sequence(s):
-# Verifying inputs
-    if len(s) == 0:
-        print("Error: You did not enter any sequence!")
-        return None
-    else:
-        valid_bases = ["A", "T", "C", "G"]
-        is_valid = True
-        for base in s:
-            if base not in valid_bases:
-                is_valid = False
-                print("Error: The sequence contains numbers or codes that are not allowed!")
-                break
-        if is_valid:
-            return s
-        return None
+# Opening the file
+while True:
+    file_name = input("Please Enter The File Name Name: ")
+    try: 
+        file = open(file_name,"r")
+        # Saving DNA in a list
+        dna = list()
+        for line in file:
+            line = line.strip()
+            if not line or line.startswith(">"):
+                continue
+            for base in line:
+                dna.extend(base.upper())
+        if not dna:
+            print(f"Error: \"{file_name}\" is Empty!")
+            continue
+        file.close()
+        break
 
-# Taking DNA from the user & uppercases it
-dna = None
-while dna == None:
-    dna = genome_sequence(input('Please enter the DNA sequence: ').upper())
-
+    except FileNotFoundError:
+        print(f"Error: \"{file_name}\" Has Not Found!")
+        continue
 
 # Calculating length
-print("length =",len(dna))
+dna_length = len(dna)
+print("length =",dna_length)
 
-# GC count
-gc_count = 0
+# Bases count
+bases = dict()
 for base in dna:
-        if base == "G" or base == "C":
-             gc_count = gc_count + 1
-print("GC count =",gc_count)
+        bases[base] = bases.get(base,0) + 1
+for k,v in bases.items():
+    print(f"{k}: {v}")
+    
 
-# GC Percentage
-gc_percentage = (gc_count/len(dna)) * 100
-print(f"GC Percentage = {round(gc_percentage, 3)}%")
+# Calculating the total without N value
+canonical_total = sum(bases.get(b, 0) for b in "ATGC")
+print("Main Total=",canonical_total)
 
-# RNA sequence
-rna = dna.replace("T", "U")
-print("RNA =",rna)
+valid_bases = set("ATGCNRYMKSWBDHV")
+contents_dict = {} #storing the results for the report
+
+# Taking the base to calculat contant
+while True:
+    base = input("Enter base\bases to see its content\nOr Enter \"skip\" to pass: ").upper().strip()
+    if base == "SKIP": 
+        break
+
+    elif len(base) < 1:
+        print("Unverified input!")
+        continue
+
+    else:
+        input_list = list(base.split())
+        lst = list()
+        is_valid = True
+
+        for b in input_list:
+            if all(x in valid_bases for x in b):
+                lst.append(b)
+            else:
+                print(b, "Invalid input!")
+                is_valid = False
+        if not is_valid:
+            continue
+
+# counting the given base contant
+    lst = list(dict.fromkeys(lst))
+    try:
+        for selected_bases in lst:
+            total = canonical_total
+            base_count = 0
+            for base in selected_bases: 
+                if base == "N":
+                    total = dna_length
+                base_count = base_count + bases.get(base,0)
+            base_content = (base_count / total) * 100
+            print(selected_bases,f"content = {round(base_content, 3)}%")
+            contents_dict[selected_bases] = round(base_content, 3) #storing the results for the report
+            continue
+        continue
+    except ZeroDivisionError: 
+        print("Error: No Valid Bases Available For Calculation.")
+        break
+
+print("Done!")
+
+# Report file
+report = open("Genome_Analyzer_Report.txt","w")
+report.write("Simple Genome Analyzer\n")
+report.write("=======================\n")
+report.write(f"File Name: {file_name}\n")
+report.write(f"Sequence Length: {dna_length}\n\n")
+report.write("-------------------------------------------\n")
+
+# Bases counts
+report.write("Nucleotide Distribution\n\n")
+# report.write("\n")
+for k,v in bases.items():
+    report.write(f"{k}: {v}\n") 
+report.write("-------------------------------------------\n")
+
+# Bases Content
+report.write("Base Content Results\n\n")
+# report.write("\n")
+for base, content in contents_dict.items():
+    report.write(f"{base}: {content}%\n")
+report.write("-------------------------------------------\n")
+
+report.close()
