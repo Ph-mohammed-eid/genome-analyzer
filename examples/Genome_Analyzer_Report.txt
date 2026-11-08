@@ -1,0 +1,23 @@
+Simple Genome Analyzer
+=======================
+File Name: Homo_sapiens_chromosome_1_short.txt
+Sequence Length: 3220
+
+-------------------------------------------
+Nucleotide Distribution
+
+N: 1260
+C: 387
+G: 398
+A: 527
+T: 648
+-------------------------------------------
+Base Content Results
+
+N: 39.13%
+A: 26.888%
+T: 33.061%
+C: 19.745%
+G: 20.306%
+CG: 40.051%
+-------------------------------------------
